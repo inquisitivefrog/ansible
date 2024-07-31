@@ -1,0 +1,43 @@
+---
+- name: Install Server Packages
+  hosts: 
+    - test.virtualbox.org
+
+  become: true
+
+  tasks:
+    - name: Update apt repo and cache
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+        cache_valid_time: 3600
+
+    - name: install ntpd
+      ansible.builtin.apt:
+        name: ntp=4.2.8p15
+
+    - name: enable ntpd
+      ansible.builtin.service:
+        name: ntp
+        state: started
+        enabled: true
+
+    - name: install rsyslogd
+      ansible.builtin.apt:
+        name: rsyslog=8.2312.0-3ubuntu9
+
+    - name: enable rsyslogd
+      ansible.builtin.service:
+        name: rsyslog
+        state: started
+        enabled: true
+
+    - name: install telegraf
+      ansible.builtin.apt:
+        name: telegraf=1.22.3+ds1-0ubuntu2
+
+    - name: enable telegraf
+      ansible.builtin.service:
+        name: telegraf
+        state: started
+        enabled: true

@@ -1,0 +1,84 @@
+---
+- name: Install Network Cache Packages
+  hosts: test.virtualbox.org
+
+  become: true
+  gather_facts: False
+  vars:
+    redis_password: j2gfJulFR8
+
+  tasks:
+    - name: Update apt repo and cache
+      ansible.builtin.apt:
+        update_cache: yes
+        force_apt_get: yes
+        cache_valid_time: 3600
+
+    - name: Install required packages
+      ansible.builtin.apt:
+        name:
+          - gnupg=2.4.4-2ubuntu17
+          - vim=2:9.1.0016-1ubuntu7.1
+
+    - name: Add Redis repository
+      shell: |
+        curl https://packages.redis.io/gpg | sudo apt-key add -
+        echo "deb https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+
+    - name: install Redis Client
+      ansible.builtin.apt:
+        name: redis
+
+    - name: install Redis Server
+      ansible.builtin.apt:
+        name: redis-server
+        update_cache: yes
+      notify:
+        - Enable Redis
+        
+    - name: declare Redis pid file
+      lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: "^pidfile"
+        line: "pidfile /var/run/redis/redis-server.pid"
+      notify:
+        - Restart Redis
+
+    - name: Secure Redis
+      lineinfile:
+        dest: /etc/redis/redis.conf
+        regexp: '^(# )?requirepass \w*$'
+        line: 'requirepass {{ redis_password }}'
+        state: present
+      notify:
+        - Restart Redis
+
+    - name: bind to all access
+      lineinfile:
+        dest: /etc/redis/redis.conf
+        regexp: '^bind \b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b$'
+        line: 'bind 0.0.0.0'
+        state: present
+      notify:
+        - Restart Redis
+
+  handlers:
+    - name: Restart Redis
+      systemd:
+        name: redis-server
+        state: restarted
+
+    - name: Start Redis
+      systemd:
+        name: redis-server
+        state: started
+
+    - name: Stop Redis
+      systemd:
+        name: redis-server
+        state: stopped
+
+    - name: Enable Redis
+      systemd:
+        name: redis-server
+        enabled: yes

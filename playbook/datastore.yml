@@ -1,0 +1,84 @@
+---
+- name: Install Server Packages
+  hosts: clone2.virtualbox.org
+  become: true
+
+  tasks:
+    - name: install MySQL
+      ansible.builtin.apt:
+        name: mysql-server
+        enabled: state
+
+
+    - name: enable MySQL
+      ansible.builtin.service:
+        name: mysql-server
+        state: started
+        enabled: true
+
+    - name: install MariaDB
+      ansible.builtin.apt:
+        name: mariadb-server
+        enabled: state
+
+    - name: enable MariaDB
+      ansible.builtin.service:
+        name: mariadb-server
+        state: started
+        enabled: true
+
+    - name: install Percona
+      ansible.builtin.apt:
+        name: curl
+        enabled: state
+
+    - name: enable Percona
+      ansible.builtin.service:
+        name: mariadb-server
+        state: started
+        enabled: true
+
+    - name: install MongoDB
+      ansible.builtin.apt:
+        name: nginx=1.24.0
+        enabled: state
+
+    - name: enable MongoDB
+      ansible.builtin.service:
+        name: mariadb-server
+        state: started
+        enabled: true
+
+    - name: install CouchDB
+      ansible.builtin.apt:
+        name: nginx=1.24.0
+        enabled: state
+
+    - name: enable CouchDB
+      ansible.builtin.service:
+        name: mariadb-server
+        state: started
+        enabled: true
+
+    - name: install Cassandra
+      ansible.builtin.apt:
+        name: nginx=1.24.0
+        enabled: state
+
+    - name: enable Cassandra
+      ansible.builtin.service:
+        name: mariadb-server
+        state: started
+        enabled: true
+
+    - name: install HBase
+      ansible.builtin.apt:
+        name: nginx=1.24.0
+        enabled: state
+          
+    - name: enable HBase
+      ansible.builtin.service:
+        name: mariadb-server
+        state: started
+        enabled: true
+

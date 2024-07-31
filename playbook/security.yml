@@ -1,0 +1,29 @@
+---
+- name: Install Server Packages
+  hosts: 
+    - ubuntu.virtualbox.org
+    - clone1.virtualbox.org
+    - clone2.virtualbox.org
+
+  become: true
+
+  tasks:
+    - name: install OpenSSH-server
+      ansible.builtin.apt:
+        name: openssh-server=9.6p1
+
+    - name: enable OpenSSH-server
+      ansible.builtin.service:
+        name: openssh-server
+        state: started
+        enabled: true
+
+    - name: install OpenSSH-client
+      ansible.builtin.apt:
+        name: openssh-client=9.6p1
+
+    - name: enable OpenSSH-client
+      ansible.builtin.service:
+        name: openssh-client
+        state: started
+        enabled: true

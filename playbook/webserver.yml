@@ -1,0 +1,25 @@
+---
+- name: Install Server Packages
+  hosts: web
+  become: true
+
+  tasks:
+    - name: install Apache
+      ansible.builtin.apt:
+        name: apache2=2.4.58-1ubuntu8.4
+
+    - name: enable Apache
+      ansible.builtin.service:
+        name: apache2
+        state: started
+        enabled: true
+
+    - name: install Nginx
+      ansible.builtin.apt:
+        name: nginx=1.24.0-2ubuntu7
+
+    - name: enable Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true

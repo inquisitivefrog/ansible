@@ -1,0 +1,9 @@
+---
+- name: Install Server Packages
+  hosts: ubuntu.virtualbox.org
+  become: true
+
+  tasks:
+    - name: install Git
+      ansible.builtin.apt:
+        name: git=2.43.0
