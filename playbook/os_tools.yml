@@ -32,12 +32,10 @@
         state: started
         enabled: true
 
-    - name: install telegraf
+    - name: install screen
       ansible.builtin.apt:
-        name: telegraf=1.22.3+ds1-0ubuntu2
+        name: screen=4.9.1-1build1 
 
-    - name: enable telegraf
-      ansible.builtin.service:
-        name: telegraf
-        state: started
-        enabled: true
+    - name: install tmux
+      ansible.builtin.apt:
+        name: tmux=3.4-1build1
