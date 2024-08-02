@@ -1,0 +1,71 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: install updates (CentOS)
+    tags: always
+    ansible.builtin.dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+  - name:  install updates (Ubuntu)
+    tags: always
+    ansible.builtin.apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: web
+  become: true
+  tasks:
+
+  - name: install apache and php packages
+    tags: web
+    ansible.builtin.apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install apache2 and php package
+    tags: web
+    ansible.builtin.dnf:
+      name:
+        - httpd
+        - php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+- hosts: db
+  become: true
+  tasks:
+   
+  - name: install MariaDB (CentOS)
+    tags: db
+    ansible.builtin.dnf:
+      name: mariadb
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+  - name: install MariaDB (Ubuntu)
+    tags: db
+    ansible.builtin.apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: fs
+  become: true
+  tasks:
+
+  - name: Install Samba
+    tags: fs
+    ansible.builtin.package:
+      name: samba
+      state: latest

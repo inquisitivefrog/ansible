@@ -3,9 +3,10 @@ Ansible Basics
 Files
 -----
 1. /etc/ansible/ansible.cfg
-2. /etc/sudoers.d/ansible
-3. /var/log/apt/history.log
-4. /var/log/apt/apt/term.log
+2. /etc/ansible/hosts
+3. /etc/sudoers.d/ansible
+4. /var/log/apt/history.log
+5. /var/log/apt/apt/term.log
 
 Environment Prep Commands
 -------------------------
@@ -28,14 +29,21 @@ Packages Commands
 
 Ansible Commands
 ----------------
-1. ansible all --list-hosts
-2. ansible all -m ping
-3. ansible all -m gather_facts 
-4. ansible all -m apt -a update_cache=true --become --ask-become-pass
-4. ansible all -m apt -a name=vim-nox --become --ask-become-pass
-5. ansible all -m apt -a "name=snapd state=latest" --become --ask-become-pass
-6. ansible all -m apt "upgrade=dist" --become --ask-become-pass
-7. ansible-playbook --ask-become-pass <playbook>.yml
+01. ansible all --list-hosts
+02. ansible all -m ping
+03. ansible all -m gather_facts 
+04. ansible all -m gather_facts --limit <IPv4, FQDN or group>
+05. ansible all -m apt -a update_cache=true --become --ask-become-pass
+06. ansible all -m apt -a name=vim-nox --become --ask-become-pass
+07. ansible all -m apt -a "name=snapd state=latest" --become --ask-become-pass
+08. ansible all -m apt "upgrade=dist" --become --ask-become-pass
+09. ansible all -vvvv --list-hosts
+10. ansible-playbook --ask-become-pass <playbook>.yml
+11. ansible-playbook --syntax-check <playbook>.yml
+12. ansible-playbook --check <playbook>.yml
+13. ansible-playbook --list-tags <playbook>.yml
+14. ansible-playbook --tags <tag> --check <playbook>.yml
+15. ansible-playbook --tags "<tag>,<tag>" --check <playbook>.yml
 
 Playbook Hints
 --------------
@@ -60,7 +68,10 @@ Playbook Hints
 Recommended Documentation
 -------------------------
 1. https://docs.ansible.com/ansible/latest/modules/apt_module.html
-2. https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_error_handling.html
+2. https://docs.ansible.com/ansible/latest/collections/ansible/builtin/dnf_module.html
+3. https://docs.ansible.com/ansible/latest/modules/package_module.html
+4. https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_error_handling.html
+5. https://betterstack.com/community/comparisons/chef-vs-puppet-vs-ansible/
 
 Recommended Videos
 ------------------
@@ -76,3 +87,14 @@ Recommended Videos
    https://youtu.be/FPU9_KDTa8A?si=Ij5jTBH5DjG2dga3
 6. Ansible Playbook
    https://youtu.be/VANub3AhZpI?si=7TyYG6-a1NQUyeIh
+7. Ansible Playbook when clause
+   https://youtu.be/BF7vIk9no14?si=TsjPzQ-le5KgU9wW
+8. Ansible Playbook refactoring tasks
+   https://youtu.be/JJ-aoyydfVU?si=LKlksv4okG_pmWva
+9. Ansible Playbook targeting nodes
+   https://youtu.be/EraC1AuWEF8?si=qzHrHg5txX-UNiWp
+10. Ansible Playbook Tags
+   https://youtu.be/gH_A-0zYLyw?si=wtanBCuBhocpven6
+11. Ansible Playbook managing files
+   https://youtu.be/teEhLgHpGgo?si=7fCAeamdcSysZOo3
+

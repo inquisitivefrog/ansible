@@ -1,0 +1,18 @@
+---
+- hosts: test
+  become: true
+  tasks:
+
+  - name: install apache and php packages
+    ansible.builtin.package:
+      name: 
+        - "{{ apache_package }}"
+        - "{{ php_package }}"
+      state: latest
+      update_cache: yes
+
+  - name: enable apache2
+    ansible.builtin.service:
+      name: "{{ apache_package }}"
+      state: started
+      enabled: true
