@@ -26,6 +26,10 @@ Packages Commands
 3. sudo apt list --upgradable
 4. sudo apt search <package>
 5. sudo apt upgrade=dist
+6. sudo dpkg -l | grep <package>
+7. sudo dpkg -r <package>
+   sudo dpkg --purge <package>
+   sudo rm /etc/apt.sources.d/<repo>
 
 Ansible Commands
 ----------------
@@ -97,4 +101,6 @@ Recommended Videos
    https://youtu.be/gH_A-0zYLyw?si=wtanBCuBhocpven6
 11. Ansible Playbook managing files
    https://youtu.be/teEhLgHpGgo?si=7fCAeamdcSysZOo3
-
+12. Ansible Playbook managing services
+   https://youtu.be/soeBHGAMkoQ?si=qALcbs-qRdWpOmay
+13. 

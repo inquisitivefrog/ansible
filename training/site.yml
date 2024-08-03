@@ -18,6 +18,25 @@
       update_cache: yes
     when: ansible_distribution == "Ubuntu"
 
+- hosts: test
+  become: true
+  tasks:
+
+  - name: install unzip
+    tags: test
+    package:
+      name: unzip
+
+  - name: install terraform
+    tags: test
+    unarchive:
+      src: https://releases.hashicorp.com/terraform/1.9.3/terraform_1.9.3_linux_amd64.zip
+      dest: /usr/local/bin
+      remote_src: yes
+      owner: root
+      group: root
+      mode: 0755
+
 - hosts: web
   become: true
   tasks:
@@ -40,7 +59,47 @@
         - php
       state: latest
       update_cache: yes
+
+  - name: start httpd (CentOS)
+    tags: web
+    ansible.builtin.service:
+      name: httpd
+      state: started
+      enabled: true
     when: ansible_distribution == "CentOS"
+
+  - name: start httpd (Ubuntu)
+    tags: web
+    ansible.builtin.service:
+      name: apache2
+      state: started
+      enabled: true
+    when: ansible_distribution == "Ubuntu"
+
+  - name: change email addr
+    tags: web
+    ansible.builtin.lineinfile:
+      path: /etc/httpd/conf/htdtpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin somebody@somwhere.net
+    when: ansible_distribution == "CentOS"
+    register: httpd
+
+  - name: restart httpd (CentOS)
+    tags: web
+    ansible.builtin.service:
+      name: httpd
+      state: restarted
+    when httpd.changed
+
+  - name: copy default html file for site
+    tags: web
+    ansible.builtin.copy:
+      src: /home/ansible/ansible/files/default_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
 
 - hosts: db
   become: true
