@@ -18,6 +18,35 @@
       update_cache: yes
     when: ansible_distribution == "Ubuntu"
 
+- hosts: all
+  become: true
+  tasks:
+
+  - name: create simone user
+    tags: always
+    ansible.builtin.user:
+      name: simone
+      comment: Simulated One User
+      groups: root
+      shell: /bin/bash
+      state: present
+    register: new_user
+
+  - name: add ssh public key for simone
+    tags: always
+    ansible.posix.authorized_key:
+      user: simone
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGKy+XTBvmvlGAYcSsyYuj99p7bXsKrxX7btQfKkXu6V simone@ubuntu"
+    when: new_user.changed
+
+  - name: add sudoers file for simone
+    tags: always
+    copy:
+      src: sudoers_simone
+      dest: /etc/sudoers.d/simone
+      owner: root
+      group: root
+
 - hosts: test
   become: true
   tasks:
@@ -90,12 +119,12 @@
     ansible.builtin.service:
       name: httpd
       state: restarted
-    when httpd.changed
+    when: httpd.changed
 
   - name: copy default html file for site
     tags: web
     ansible.builtin.copy:
-      src: /home/ansible/ansible/files/default_site.html
+      src: default_site.html
       dest: /var/www/html/index.html
       owner: root
       group: root
