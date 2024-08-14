@@ -1,0 +1,32 @@
+---
+- name: Remove New Users
+  hosts: app
+  become: true
+  vars: 
+    user: friend
+  tasks:
+
+  - name: rm sudoers file
+    tags: always
+    ansible.builtin.file:
+      path: /etc/sudoers.d/{{ user }}
+      state: absent
+
+  - name: remove ssh public key 
+    tags: always
+    ansible.builtin.file:
+      path: /home/{{ user }}/.ssh/authorized_keys
+      state: absent
+
+  - name: remove user
+    tags: always
+    ansible.builtin.user:
+      name: "{{ user }}"
+      remove: true
+      state: absent
+
+  - name: remove group
+    tags: always
+    ansible.builtin.group:
+      name: "{{ user }}"
+      state: absent

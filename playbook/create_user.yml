@@ -1,0 +1,48 @@
+---
+- name: Create New Users
+  hosts: app
+  become: true
+  vars:
+    users: ['friend']
+  tasks:
+
+  - name: create user
+    tags: always
+    ansible.builtin.user:
+      name: "{{ item }}"
+      groups: root
+      comment: "{{ item }}"
+      shell: /bin/bash
+      state: present
+      generate_ssh_key: true
+      ssh_key_comment: "ansible-generated for {{ item }}"
+      password: '$6$fAILpFU8vWoZHxwq$AQ0jNdqfnbfxWD47lDEptgbQQwmHPbQ2L45rVftPh51zHxTa/qbNo/sEQj1x0GwJ45Q2J2w5bWGCSrU15Jadc.'
+    with items: "{{ item }}"
+    register: new_users
+    become: yes
+
+  - name: confirm file
+    ansible.builtin.command: cat "/home/{{ user }}/.ssh/id_rsa.pub"
+    register: contents
+
+  - name: debug
+    ansible.builtin.debug:
+      msg: "user {{ item.item }} pubkey {{ item.ssh_public_key }}"
+    with_items: "{{ new_users.results }}"
+
+  - name: add ssh public key 
+    tags: always
+    ansible.posix.authorized_key:
+      user: "{{ item }}"
+      key: "{{ lookup('file', '/home/friend/.ssh/id_rsa.pub') }}"
+      state: present
+    when: new_users.changed
+
+  - name: add sudoers file
+    tags: always
+    ansible.builtin.copy:
+      src: sudoers
+      dest: /etc/sudoers.d/{{ user }}
+      owner: root
+      group: root
+    when: new_users.changed

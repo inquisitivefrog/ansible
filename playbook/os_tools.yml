@@ -39,3 +39,7 @@
     - name: install tmux
       ansible.builtin.apt:
         name: tmux=3.4-1build1
+
+    - name: install mkpasswd
+      ansible.builtin.apt:
+        name: whois=5.5.22
