@@ -1,0 +1,32 @@
+---
+- hosts: app
+  become: yes
+  vars:
+    active_users: ['user3', 'user4']
+  tasks:
+
+  - group:
+      name: "users"
+
+  - user:
+      name: "{{ item }}"
+      shell: /bin/bash
+      group: users
+      generate_ssh_key: true
+      ssh_key_comment: "ansible-generated for {{ item }}"
+    with_items: "{{ active_users }}"
+    register: new_users
+    become: yes
+
+  - name: print
+    debug:
+      msg: "user: {{ item.name }}, ssh_key: {{ item.ssh_key_file }}"
+    with_items: "{{ new_users.results }}"
+
+  - authorized_key:
+      user: "{{ item }}"
+      state: present
+      key: "{{ lookup('file', '{{ item.ssh_key_file }}') }}"
+    with_items: "{{ new_users.results }}"
+    become: yes
+    become_user: "{{ item }}"

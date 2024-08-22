@@ -1,0 +1,24 @@
+- name: create simone user
+  tags: always
+  ansible.builtin.user:
+    name: simone
+    comment: Simulated One User
+    groups: root
+    shell: /bin/bash
+    state: present
+  register: new_user
+
+- name: add ssh public key for simone
+  tags: always
+  ansible.posix.authorized_key:
+    user: simone
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGKy+XTBvmvlGAYcSsyYuj99p7bXsKrxX7btQfKkXu6V simone@ubuntu"
+  when: new_user.changed
+
+- name: add sudoers file for simone
+  tags: always
+  copy:
+    src: sudoers_simone
+    dest: /etc/sudoers.d/simone
+    owner: root
+    group: root

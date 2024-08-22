@@ -1,0 +1,5 @@
+- name: Install Samba
+  tags: fs
+  ansible.builtin.package:
+    name: samba
+    state: latest

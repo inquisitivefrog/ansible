@@ -1,0 +1,160 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: update repo cache (CentOS)
+    tags: always
+    ansible.builtin.dnf:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "CentOS"
+
+  - name:  update repo cache (Ubuntu)
+    tags: always
+    ansible.builtin.apt:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: create simone user
+    tags: always
+    ansible.builtin.user:
+      name: simone
+      comment: Simulated One User
+      groups: root
+      shell: /bin/bash
+      state: present
+    register: new_user
+
+  - name: add ssh public key for simone
+    tags: always
+    ansible.posix.authorized_key:
+      user: simone
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGKy+XTBvmvlGAYcSsyYuj99p7bXsKrxX7btQfKkXu6V simone@ubuntu"
+    when: new_user.changed
+
+  - name: add sudoers file for simone
+    tags: always
+    copy:
+      src: sudoers_simone
+      dest: /etc/sudoers.d/simone
+      owner: root
+      group: root
+
+- hosts: test
+  become: true
+  tasks:
+
+  - name: install unzip
+    tags: test
+    package:
+      name: unzip
+
+  - name: install terraform
+    tags: test
+    unarchive:
+      src: https://releases.hashicorp.com/terraform/1.9.3/terraform_1.9.3_linux_amd64.zip
+      dest: /usr/local/bin
+      remote_src: yes
+      owner: root
+      group: root
+      mode: 0755
+
+- hosts: web
+  become: true
+  tasks:
+
+  - name: install apache and php packages
+    tags: web
+    ansible.builtin.apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install apache2 and php package
+    tags: web
+    ansible.builtin.dnf:
+      name:
+        - httpd
+        - php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: start httpd (CentOS)
+    tags: web
+    ansible.builtin.service:
+      name: httpd
+      state: started
+      enabled: true
+    when: ansible_distribution == "CentOS"
+
+  - name: start httpd (Ubuntu)
+    tags: web
+    ansible.builtin.service:
+      name: apache2
+      state: started
+      enabled: true
+    when: ansible_distribution == "Ubuntu"
+
+  - name: change email addr
+    tags: web
+    ansible.builtin.lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin somebody@somwhere.net
+    when: ansible_distribution == "CentOS"
+    register: httpd
+
+  - name: restart httpd (CentOS)
+    tags: web
+    ansible.builtin.service:
+      name: httpd
+      state: restarted
+    when: httpd.changed
+
+  - name: copy default html file for site
+    tags: web
+    ansible.builtin.copy:
+      src: default_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
+
+- hosts: db
+  become: true
+  tasks:
+   
+  - name: install MariaDB (CentOS)
+    tags: db
+    ansible.builtin.dnf:
+      name: mariadb
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+  - name: install MariaDB (Ubuntu)
+    tags: db
+    ansible.builtin.apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: fs
+  become: true
+  tasks:
+
+  - name: Install Samba
+    tags: fs
+    ansible.builtin.package:
+      name: samba
+      state: latest
