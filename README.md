@@ -71,11 +71,18 @@ Playbook Hints
 
 Recommended Documentation
 -------------------------
-1. https://docs.ansible.com/ansible/latest/modules/apt_module.html
-2. https://docs.ansible.com/ansible/latest/collections/ansible/builtin/dnf_module.html
-3. https://docs.ansible.com/ansible/latest/modules/package_module.html
-4. https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_error_handling.html
-5. https://betterstack.com/community/comparisons/chef-vs-puppet-vs-ansible/
+01. https://docs.ansible.com/ansible/latest/modules/apt_module.html
+02. https://docs.ansible.com/ansible/latest/collections/ansible/builtin/dnf_module.html
+03. https://docs.ansible.com/ansible/latest/modules/package_module.html
+04. https://docs.ansible.com/ansible/latest/collections/ansible/builtin/lineinfile_module.html#ansible-collections-ansible-builtin-lineinfile-module
+05. https://docs.ansible.com/ansible/latest/collections/ansible/builtin/service_module.html#ansible-collections-ansible-builtin-service-module
+06. https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_error_handling.html
+07. https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_conditionals.html#conditions-based-on-registered-variables
+08. https://docs.ansible.com/ansible/latest/collections/ansible/posix/index.html#plugins-in-ansible-posix
+09. https://docs.ansible.com/ansible/latest/collections/ansible/builtin/user_module.html#ansible-collections-ansible-builtin-user-module
+10. https://betterstack.com/community/comparisons/chef-vs-puppet-vs-ansible/
+11. https://docs.ansible.com/ansible/latest/collections/ansible/netcommon/cli_command_module.html#ansible-collections-ansible-netcommon-cli-command-module
+13. https://docs.ansible.com/ansible/latest/reference_appendices/playbooks_keywords.html#role
 
 Recommended Videos
 ------------------
@@ -103,4 +110,12 @@ Recommended Videos
    https://youtu.be/teEhLgHpGgo?si=7fCAeamdcSysZOo3
 12. Ansible Playbook managing services
    https://youtu.be/soeBHGAMkoQ?si=qALcbs-qRdWpOmay
-13. 
+13. Ansible Playbook adding users
+    https://youtu.be/P5iKWANifrU?si=0Y_gb-VBKgGtoeyL
+14. Ansible Playboook adding roles
+    https://www.youtube.com/watch?v=tq9sCeQNVYc
+15. Ansible Playbook host variables
+    https://www.youtube.com/watch?v=shBlQQZLU9M
+16. Ansible Playbook templates
+    https://www.youtube.com/watch?v=s8F_YWGHeDM
+
