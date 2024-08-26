@@ -1,0 +1,18 @@
+
+Common Use Cases
+----------------
+1. provision environments
+   eliminate snowflake servers with provision/deployment from single source
+   pre-made image preserved in a repository
+2. configure operating systems
+   post provision/deployment of hosts, modify kernel or major config files
+   and add or remove or update packages
+3. deployment of applications
+   post provision/deployment of hosts, retrieve custom libraries or applications
+   from a repository and deploy or update them to these hosts
+4. perform compliance checks
+   a. confirm valid TLS certificates
+   b. confirm host network access restricted by a custom firewall
+   c. confirm SSH access restricted to authorized users and applications
+   d. confirm security tools installed
+   e. confirm security patches installed by version, file size or timestamp
